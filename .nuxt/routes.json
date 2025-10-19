@@ -1,0 +1,30 @@
+[
+  {
+    "name": "dashboard",
+    "path": "/dashboard",
+    "component": "D:\\\\projects\\\\nuxt-auth-project\\\\pages\\\\dashboard.vue",
+    "chunkName": "pages/dashboard",
+    "_name": "_b8523b80"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "D:\\\\projects\\\\nuxt-auth-project\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_0177c2d6"
+  },
+  {
+    "name": "register",
+    "path": "/register",
+    "component": "D:\\\\projects\\\\nuxt-auth-project\\\\pages\\\\register.vue",
+    "chunkName": "pages/register",
+    "_name": "_5673f627"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "D:\\\\projects\\\\nuxt-auth-project\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_359c7b7e"
+  }
+]
