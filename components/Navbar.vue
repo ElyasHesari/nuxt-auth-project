@@ -6,7 +6,7 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
       <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav class="ml-auto">
+        <b-navbar-nav class="mr-auto">
           <b-nav-item to="/">خانه</b-nav-item>
           
           <template v-if="!isAuthenticated">

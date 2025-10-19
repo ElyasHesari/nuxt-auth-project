@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: 'Vazirmatn', Arial, sans-serif !important;
+}
+
+html {
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  font-family: 'Vazirmatn', Arial, sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+.text-left {
+  text-align: right !important;
+}
+
+.text-right {
+  text-align: left !important;
+}
+
+.ml-auto {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+.mr-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+.float-left {
+  float: right !important;
+}
+
+.float-right {
+  float: left !important;
+}
+
+.navbar-nav {
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+.navbar-brand {
+  margin-right: 0 !important;
+  margin-left: 1rem !important;
+}
+
+.form-group label {
+  text-align: right;
+  display: block;
+}
+
+.form-control {
+  text-align: right;
+  direction: rtl;
+}
+
+.btn {
+  font-family: 'Vazirmatn', Arial, sans-serif;
+}
+
+.card-title {
+  text-align: right;
+}
+
+.card-text {
+  text-align: right;
+}
+
+.list-group-item {
+  text-align: right;
+}
+
+.badge {
+  font-family: 'Vazirmatn', Arial, sans-serif;
+}
+
+.alert {
+  text-align: right;
+}
+
+.alert-heading {
+  text-align: right;
+}
+
+.modal-title {
+  text-align: right;
+}
+
+.modal-body {
+  text-align: right;
+}
+
+.breadcrumb {
+  text-align: right;
+}
+
+.dropdown-menu {
+  text-align: right;
+  right: 0;
+  left: auto;
+}
+
+.ml-1 {
+  margin-left: 0 !important;
+  margin-right: 0.25rem !important;
+}
+
+.ml-2 {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+.ml-3 {
+  margin-left: 0 !important;
+  margin-right: 1rem !important;
+}
+
+.mr-1 {
+  margin-right: 0 !important;
+  margin-left: 0.25rem !important;
+}
+
+.mr-2 {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+.mr-3 {
+  margin-right: 0 !important;
+  margin-left: 1rem !important;
+}
+
+.pl-1 {
+  padding-left: 0 !important;
+  padding-right: 0.25rem !important;
+}
+
+.pl-2 {
+  padding-left: 0 !important;
+  padding-right: 0.5rem !important;
+}
+
+.pl-3 {
+  padding-left: 0 !important;
+  padding-right: 1rem !important;
+}
+
+.pr-1 {
+  padding-right: 0 !important;
+  padding-left: 0.25rem !important;
+}
+
+.pr-2 {
+  padding-right: 0 !important;
+  padding-left: 0.5rem !important;
+}
+
+.pr-3 {
+  padding-right: 0 !important;
+  padding-left: 1rem !important;
+}
+
+.jumbotron {
+  text-align: right;
+}
+
+.jumbotron h1,
+.jumbotron .h1 {
+  text-align: right;
+}
+
+.jumbotron p {
+  text-align: right;
+}
+
+.b-toast {
+  text-align: right;
+}
+
+.b-toast .toast-body {
+  text-align: right;
+}
+
+.navbar-toggler {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+p, span, div, a, button, input, textarea, select {
+  font-family: 'Vazirmatn', Arial, sans-serif;
+}
+
+.invalid-feedback {
+  text-align: right;
+  direction: rtl;
+}
+
+.valid-feedback {
+  text-align: right;
+  direction: rtl;
+}
+
+small {
+  text-align: right;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

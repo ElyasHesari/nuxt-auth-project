@@ -8,7 +8,7 @@
               id="email"
               v-model="$v.form.email.$model"
               type="email"
-              placeholder="your@email.com"
+              placeholder="example@email.com"
               :state="validateState('email')"
             ></b-form-input>
             <b-form-invalid-feedback v-if="!$v.form.email.required">

@@ -60,8 +60,8 @@
             </b-card>
 
             <div class="text-center mt-4">
-              <b-button variant="danger" @click="handleLogout">
-                <b-icon icon="box-arrow-right"></b-icon>
+              <b-button variant="danger" @click="handleLogout" size="lg">
+                <b-icon icon="box-arrow-right" class="mr-2"></b-icon>
                 خروج از حساب کاربری
               </b-button>
             </div>

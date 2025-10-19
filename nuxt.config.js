@@ -1,5 +1,4 @@
 export default {
-  // Global page headers
   head: {
     title: 'Authentication App',
     htmlAttrs: {
@@ -16,50 +15,41 @@ export default {
     ]
   },
 
-  // Global CSS
   css: [
+    '~/assets/css/main.css'
   ],
 
-  // Plugins to run before rendering page
   plugins: [
     '~/plugins/firebase.js',
     '~/plugins/vuelidate.js'
   ],
 
-  // Auto import components
   components: true,
 
-  // Modules for dev and build
   buildModules: [
   ],
 
-  // Modules
   modules: [
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
   ],
 
-  // Bootstrap Vue configuration
   bootstrapVue: {
     bootstrapCSS: true,
     bootstrapVueCSS: true
   },
 
-  // Axios module configuration
   axios: {
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
   },
 
-  // Router middleware
   router: {
     middleware: []
   },
 
-  // Build Configuration
   build: {
   },
 
-  // Environment variables
   publicRuntimeConfig: {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
