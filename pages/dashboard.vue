@@ -75,7 +75,7 @@
 <script>
 export default {
   name: 'DashboardPage',
-  middleware: 'auth',
+  middleware: 'client-auth',
   data() {
     return {
       currentDate: new Date().toLocaleDateString('fa-IR')

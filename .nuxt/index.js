@@ -18,6 +18,8 @@ import nuxt_plugin_bootstrapvue_0b88d28b from 'nuxt_plugin_bootstrapvue_0b88d28b
 import nuxt_plugin_axios_3c68105c from 'nuxt_plugin_axios_3c68105c' // Source: .\\axios.js (mode: 'all')
 import nuxt_plugin_firebase_34d6f55a from 'nuxt_plugin_firebase_34d6f55a' // Source: ..\\plugins\\firebase.js (mode: 'all')
 import nuxt_plugin_vuelidate_4be431c8 from 'nuxt_plugin_vuelidate_4be431c8' // Source: ..\\plugins\\vuelidate.js (mode: 'all')
+import nuxt_plugin_authpersistence_20adc2f2 from 'nuxt_plugin_authpersistence_20adc2f2' // Source: ..\\plugins\\auth-persistence.js (mode: 'client')
+import nuxt_plugin_localStorage_830ec59e from 'nuxt_plugin_localStorage_830ec59e' // Source: ..\\plugins\\localStorage.js (mode: 'client')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -235,6 +237,14 @@ async function createApp(ssrContext, config = {}) {
 
   if (typeof nuxt_plugin_vuelidate_4be431c8 === 'function') {
     await nuxt_plugin_vuelidate_4be431c8(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_authpersistence_20adc2f2 === 'function') {
+    await nuxt_plugin_authpersistence_20adc2f2(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_localStorage_830ec59e === 'function') {
+    await nuxt_plugin_localStorage_830ec59e(app.context, inject)
   }
 
   // Lock enablePreview in context

@@ -1,7 +1,8 @@
 <template>
   <div>
     <b-jumbotron header="خوش آمدید" lead="سیستم احراز هویت با Nuxt.js و Firebase">
-      <p>این یک پروژه نمونه برای احراز هویت کاربران است.</p>
+      <p v-if="!isAuthenticated">این یک پروژه نمونه برای احراز هویت کاربران است.</p>
+      <p v-else>خوش آمدید {{ userEmail }}! شما با موفقیت وارد شده‌اید.</p>
       <b-button v-if="!isAuthenticated" variant="primary" to="/register" size="lg">
         ثبت نام کنید
       </b-button>
@@ -48,6 +49,9 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated
+    },
+    userEmail() {
+      return this.$store.getters.getUserEmail || 'کاربر'
     }
   }
 }

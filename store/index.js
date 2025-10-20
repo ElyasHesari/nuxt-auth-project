@@ -2,7 +2,8 @@ export const state = () => ({
   user: null,
   token: null,
   tokenExpiration: null,
-  logoutTimer: null
+  logoutTimer: null,
+  isInitialized: false
 })
 
 export const mutations = {
@@ -26,6 +27,9 @@ export const mutations = {
       clearTimeout(state.logoutTimer)
       state.logoutTimer = null
     }
+  },
+  SET_INITIALIZED(state, value) {
+    state.isInitialized = value
   }
 }
 
@@ -161,9 +165,14 @@ export const actions = {
   },
 
   tryAutoLogin({ commit, dispatch, state }) {
-    if (!process.client) return
+    if (!process.client) {
+      commit('SET_INITIALIZED', true)
+      return false
+    }
 
+    // اگر قبلاً در store موجود است، نیازی به بازیابی نیست
     if (state.token && state.user) {
+      commit('SET_INITIALIZED', true)
       return true
     }
 
@@ -172,7 +181,8 @@ export const actions = {
     const email = localStorage.getItem('userEmail')
     const uid = localStorage.getItem('userUid')
 
-    if (!token || !expirationTime) {
+    if (!token || !expirationTime || !email || !uid) {
+      commit('SET_INITIALIZED', true)
       return false
     }
 
@@ -180,17 +190,26 @@ export const actions = {
     const expiresIn = +expirationTime - now
 
     if (expiresIn < 0) {
-      // توکن منقضی شده
-      dispatch('logout')
+      // توکن منقضی شده - پاک کردن localStorage
+      if (process.client) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('tokenExpiration')
+        localStorage.removeItem('userEmail')
+        localStorage.removeItem('userUid')
+      }
+      commit('SET_INITIALIZED', true)
       return false
     }
 
+    // بازیابی اطلاعات احراز هویت
     commit('SET_TOKEN', token)
-    commit('SET_TOKEN_EXPIRATION', expirationTime)
+    commit('SET_TOKEN_EXPIRATION', +expirationTime)
     commit('SET_USER', { email, uid })
     
+    // تنظیم تایمر logout
     dispatch('setLogoutTimer', expiresIn)
     
+    commit('SET_INITIALIZED', true)
     return true
   },
 
@@ -224,12 +243,15 @@ export const actions = {
 
 export const getters = {
   isAuthenticated(state) {
-    return !!state.token && !!state.user
+    return !!state.token && !!state.user && state.isInitialized
   },
   getUser(state) {
     return state.user
   },
   getUserEmail(state) {
     return state.user ? state.user.email : null
+  },
+  isInitialized(state) {
+    return state.isInitialized
   }
 }

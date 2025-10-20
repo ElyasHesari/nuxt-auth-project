@@ -21,7 +21,9 @@ export default {
 
   plugins: [
     '~/plugins/firebase.js',
-    '~/plugins/vuelidate.js'
+    '~/plugins/vuelidate.js',
+    { src: '~/plugins/auth-persistence.js', mode: 'client' },
+    { src: '~/plugins/localStorage.js', mode: 'client' }
   ],
 
   components: true,

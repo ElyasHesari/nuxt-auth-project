@@ -1,5 +1,5 @@
 export default async function ({ store, redirect }) {
-  // فقط در سمت کلاینت بررسی کنیم
+  // فقط در سمت کلاینت اجرا شود
   if (!process.client) {
     return
   }
@@ -9,11 +9,12 @@ export default async function ({ store, redirect }) {
   
   // اگر هنوز initialize نشده، منتظر بمانیم
   if (!store.getters.isInitialized) {
-    await new Promise(resolve => setTimeout(resolve, 200))
+    // کمی منتظر بمانیم تا store initialize شود
+    await new Promise(resolve => setTimeout(resolve, 500))
   }
-
-  // اگر کاربر احراز هویت شده، به صفحه اصلی هدایت شود
-  if (store.getters.isAuthenticated) {
-    return redirect('/')
+  
+  // بررسی نهایی احراز هویت
+  if (!store.getters.isAuthenticated) {
+    return redirect('/login')
   }
 }
