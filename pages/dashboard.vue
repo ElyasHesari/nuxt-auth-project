@@ -106,7 +106,7 @@ export default {
           okTitle: 'بله، خارج شو',
           cancelTitle: 'انصراف',
           footerClass: 'p-2',
-          hideHeaderClose: false,
+          hideHeaderClose: true,
           centered: true
         }
       )
