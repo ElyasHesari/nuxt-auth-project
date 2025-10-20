@@ -127,27 +127,31 @@ export default {
       } catch (error) {
         console.error('Login error:', error)
         
-        switch (error.code) {
-          case 'auth/user-not-found':
-            this.error = 'کاربری با این ایمیل یافت نشد'
-            break
-          case 'auth/wrong-password':
-            this.error = 'رمز عبور اشتباه است'
-            break
-          case 'auth/invalid-email':
-            this.error = 'فرمت ایمیل نامعتبر است'
-            break
-          case 'auth/user-disabled':
-            this.error = 'این حساب کاربری غیرفعال شده است'
-            break
-          case 'auth/too-many-requests':
-            this.error = 'تعداد تلاش‌های ناموفق زیاد است. لطفاً بعداً تلاش کنید'
-            break
-          case 'auth/invalid-credential':
-            this.error = 'ایمیل یا رمز عبور اشتباه است'
-            break
-          default:
-            this.error = error.message || 'خطا در ورود'
+        if (error.code && error.message) {
+          switch (error.code) {
+            case 'auth/user-not-found':
+              this.error = 'کاربری با این ایمیل یافت نشد'
+              break
+            case 'auth/wrong-password':
+              this.error = 'رمز عبور اشتباه است'
+              break
+            case 'auth/invalid-email':
+              this.error = 'فرمت ایمیل نامعتبر است'
+              break
+            case 'auth/user-disabled':
+              this.error = 'این حساب کاربری غیرفعال شده است'
+              break
+            case 'auth/too-many-requests':
+              this.error = 'تعداد تلاش‌های ناموفق زیاد است. لطفاً بعداً تلاش کنید'
+              break
+            case 'auth/invalid-credential':
+              this.error = 'ایمیل یا رمز عبور اشتباه است'
+              break
+            default:
+              this.error = error.message || 'خطا در ورود'
+          }
+        } else {
+          this.error = error.message || 'خطا در ورود'
         }
       } finally {
         this.loading = false

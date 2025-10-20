@@ -1,3 +1,19 @@
+function convertFirebaseError(errorMessage) {
+  const errorMap = {
+    'EMAIL_EXISTS': 'auth/email-already-in-use',
+    'OPERATION_NOT_ALLOWED': 'auth/operation-not-allowed',
+    'TOO_MANY_ATTEMPTS_TRY_LATER': 'auth/too-many-requests',
+    'EMAIL_NOT_FOUND': 'auth/user-not-found',
+    'INVALID_PASSWORD': 'auth/wrong-password',
+    'INVALID_LOGIN_CREDENTIALS': 'auth/invalid-credential',
+    'USER_DISABLED': 'auth/user-disabled',
+    'INVALID_EMAIL': 'auth/invalid-email',
+    'WEAK_PASSWORD': 'auth/weak-password'
+  }
+  
+  return errorMap[errorMessage] || 'auth/unknown-error'
+}
+
 export const state = () => ({
   user: null,
   token: null,
@@ -70,11 +86,11 @@ export const actions = {
       
       return { success: true }
     } catch (error) {
-      console.error('Signup error:', error)
+      console.error('Signup error:', error.response?.data?.error?.message)
       
       const errorMessage = error.response?.data?.error?.message || error.message
       const firebaseError = {
-        code: this.convertFirebaseError(errorMessage),
+        code: convertFirebaseError(errorMessage),
         message: errorMessage
       }
       throw firebaseError
@@ -122,7 +138,7 @@ export const actions = {
       
       const errorMessage = error.response?.data?.error?.message || error.message
       const firebaseError = {
-        code: this.convertFirebaseError(errorMessage),
+        code: convertFirebaseError(errorMessage),
         message: errorMessage
       }
       throw firebaseError
@@ -219,21 +235,6 @@ export const actions = {
     commit('SET_LOGOUT_TIMER', timer)
   },
 
-  convertFirebaseError(errorMessage) {
-    const errorMap = {
-      'EMAIL_EXISTS': 'auth/email-already-in-use',
-      'OPERATION_NOT_ALLOWED': 'auth/operation-not-allowed',
-      'TOO_MANY_ATTEMPTS_TRY_LATER': 'auth/too-many-requests',
-      'EMAIL_NOT_FOUND': 'auth/user-not-found',
-      'INVALID_PASSWORD': 'auth/wrong-password',
-      'INVALID_LOGIN_CREDENTIALS': 'auth/invalid-credential',
-      'USER_DISABLED': 'auth/user-disabled',
-      'INVALID_EMAIL': 'auth/invalid-email',
-      'WEAK_PASSWORD': 'auth/weak-password'
-    }
-    
-    return errorMap[errorMessage] || 'auth/unknown-error'
-  }
 }
 
 export const getters = {

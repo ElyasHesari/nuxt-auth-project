@@ -148,18 +148,28 @@ export default {
       } catch (error) {
         console.error('Register error:', error)
         
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            this.error = 'این ایمیل قبلاً ثبت شده است'
-            break
-          case 'auth/invalid-email':
-            this.error = 'فرمت ایمیل نامعتبر است'
-            break
-          case 'auth/weak-password':
-            this.error = 'رمز عبور ضعیف است'
-            break
-          default:
-            this.error = error.message || 'خطا در ثبت نام'
+        if (error.code && error.message) {
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              this.error = 'این ایمیل قبلاً ثبت شده است'
+              break
+            case 'auth/invalid-email':
+              this.error = 'فرمت ایمیل نامعتبر است'
+              break
+            case 'auth/weak-password':
+              this.error = 'رمز عبور ضعیف است'
+              break
+            case 'auth/operation-not-allowed':
+              this.error = 'ثبت نام در حال حاضر مجاز نیست'
+              break
+            case 'auth/too-many-requests':
+              this.error = 'تعداد تلاش‌های ناموفق زیاد است. لطفاً بعداً تلاش کنید'
+              break
+            default:
+              this.error = error.message || 'خطا در ثبت نام'
+          }
+        } else {
+          this.error = error.message || 'خطا در ثبت نام'
         }
       } finally {
         this.loading = false
