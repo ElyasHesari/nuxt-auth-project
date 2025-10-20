@@ -94,6 +94,14 @@ export default {
       error: ''
     }
   },
+  async mounted() {
+    if (process.client) {
+      await this.$store.dispatch('tryAutoLogin')
+      if (this.$store.getters.isAuthenticated) {
+        this.$router.push('/')
+      }
+    }
+  },
   validations: {
     form: {
       email: {

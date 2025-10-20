@@ -86,6 +86,14 @@ export default {
       return this.$store.getters.getUserEmail || 'کاربر'
     }
   },
+  async mounted() {
+    if (process.client) {
+      await this.$store.dispatch('tryAutoLogin')
+      if (!this.$store.getters.isAuthenticated) {
+        this.$router.push('/login')
+      }
+    }
+  },
   methods: {
     async handleLogout() {
       const confirmed = await this.$bvModal.msgBoxConfirm(

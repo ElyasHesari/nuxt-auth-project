@@ -59,7 +59,6 @@ export const actions = {
       commit('SET_TOKEN', token)
       commit('SET_TOKEN_EXPIRATION', expirationTime)
       
-      // ذخیره در localStorage
       dispatch('saveAuthToStorage', {
         token,
         expirationTime,
@@ -170,7 +169,6 @@ export const actions = {
       return false
     }
 
-    // اگر قبلاً در store موجود است، نیازی به بازیابی نیست
     if (state.token && state.user) {
       commit('SET_INITIALIZED', true)
       return true
@@ -190,7 +188,6 @@ export const actions = {
     const expiresIn = +expirationTime - now
 
     if (expiresIn < 0) {
-      // توکن منقضی شده - پاک کردن localStorage
       if (process.client) {
         localStorage.removeItem('token')
         localStorage.removeItem('tokenExpiration')
@@ -201,12 +198,10 @@ export const actions = {
       return false
     }
 
-    // بازیابی اطلاعات احراز هویت
     commit('SET_TOKEN', token)
     commit('SET_TOKEN_EXPIRATION', +expirationTime)
     commit('SET_USER', { email, uid })
     
-    // تنظیم تایمر logout
     dispatch('setLogoutTimer', expiresIn)
     
     commit('SET_INITIALIZED', true)

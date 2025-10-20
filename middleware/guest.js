@@ -1,18 +1,17 @@
 export default async function ({ store, redirect }) {
-  // فقط در سمت کلاینت بررسی کنیم
   if (!process.client) {
     return
   }
 
-  // ابتدا سعی کنیم auto-login کنیم
   await store.dispatch('tryAutoLogin')
   
-  // اگر هنوز initialize نشده، منتظر بمانیم
-  if (!store.getters.isInitialized) {
-    await new Promise(resolve => setTimeout(resolve, 200))
+  let attempts = 0
+  const maxAttempts = 10
+  while (!store.getters.isInitialized && attempts < maxAttempts) {
+    await new Promise(resolve => setTimeout(resolve, 100))
+    attempts++
   }
 
-  // اگر کاربر احراز هویت شده، به صفحه اصلی هدایت شود
   if (store.getters.isAuthenticated) {
     return redirect('/')
   }
