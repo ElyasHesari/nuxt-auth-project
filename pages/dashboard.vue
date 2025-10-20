@@ -4,7 +4,7 @@
       <b-col md="8">
         <b-card title="داشبورد کاربر" class="mt-5">
           <b-card-text>
-            <h4 class="mb-4">خوش آمدید! 👋</h4>
+            <h4 class="mb-4">خوش آمدید!</h4>
             
             <b-list-group>
               <b-list-group-item>
