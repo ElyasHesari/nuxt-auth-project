@@ -1,5 +1,3 @@
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
 
 export default ({ $config }, inject) => {
   const firebaseConfig = {
@@ -11,8 +9,5 @@ export default ({ $config }, inject) => {
     appId: $config.firebaseAppId
   }
 
-  const app = initializeApp(firebaseConfig)
-  const auth = getAuth(app)
-
-  inject('firebaseAuth', auth)
+  inject('firebaseConfig', firebaseConfig)
 }

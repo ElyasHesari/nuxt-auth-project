@@ -11,7 +11,6 @@
 export default {
   name: 'DefaultLayout',
   mounted() {
-    this.$store.dispatch('initAuth')
   }
 }
 </script>

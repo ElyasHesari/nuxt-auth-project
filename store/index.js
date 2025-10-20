@@ -1,10 +1,3 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from 'firebase/auth'
-
 export const state = () => ({
   user: null,
   token: null,
@@ -39,75 +32,102 @@ export const mutations = {
 export const actions = {
   async signup({ commit, dispatch }, { email, password }) {
     try {
-      const auth = this.$firebaseAuth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-      const token = await user.getIdToken()
-      const tokenResult = await user.getIdTokenResult()
+      const apiKey = this.$config.firebaseApiKey
+      
+      const response = await this.$axios.$post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
+        {
+          email,
+          password,
+          returnSecureToken: true
+        }
+      )
+      
+      const token = response.idToken
+      const userId = response.localId
+      const expiresIn = +response.expiresIn * 1000
+      const expirationTime = Date.now() + expiresIn
       
       commit('SET_USER', {
-        email: user.email,
-        uid: user.uid
+        email,
+        uid: userId
       })
       commit('SET_TOKEN', token)
-      
-      const expirationTime = new Date(tokenResult.expirationTime).getTime()
       commit('SET_TOKEN_EXPIRATION', expirationTime)
       
+      // ذخیره در localStorage
       dispatch('saveAuthToStorage', {
         token,
         expirationTime,
-        email: user.email,
-        uid: user.uid
+        email,
+        uid: userId
       })
       
-      dispatch('setLogoutTimer', expirationTime - Date.now())
+      dispatch('setLogoutTimer', expiresIn)
       
       return { success: true }
     } catch (error) {
       console.error('Signup error:', error)
-      throw error
+      
+      const errorMessage = error.response?.data?.error?.message || error.message
+      const firebaseError = {
+        code: this.convertFirebaseError(errorMessage),
+        message: errorMessage
+      }
+      throw firebaseError
     }
   },
 
   async login({ commit, dispatch }, { email, password }) {
     try {
-      const auth = this.$firebaseAuth
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-      const token = await user.getIdToken()
-      const tokenResult = await user.getIdTokenResult()
+      const apiKey = this.$config.firebaseApiKey
+      
+      const response = await this.$axios.$post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+        {
+          email,
+          password,
+          returnSecureToken: true
+        }
+      )
+      
+      const token = response.idToken
+      const userId = response.localId
+      const userEmail = response.email
+      const expiresIn = +response.expiresIn * 1000
+      const expirationTime = Date.now() + expiresIn
       
       commit('SET_USER', {
-        email: user.email,
-        uid: user.uid
+        email: userEmail,
+        uid: userId
       })
       commit('SET_TOKEN', token)
-      
-      const expirationTime = new Date(tokenResult.expirationTime).getTime()
       commit('SET_TOKEN_EXPIRATION', expirationTime)
       
       dispatch('saveAuthToStorage', {
         token,
         expirationTime,
-        email: user.email,
-        uid: user.uid
+        email: userEmail,
+        uid: userId
       })
       
-      dispatch('setLogoutTimer', expirationTime - Date.now())
+      dispatch('setLogoutTimer', expiresIn)
       
       return { success: true }
     } catch (error) {
       console.error('Login error:', error)
-      throw error
+      
+      const errorMessage = error.response?.data?.error?.message || error.message
+      const firebaseError = {
+        code: this.convertFirebaseError(errorMessage),
+        message: errorMessage
+      }
+      throw firebaseError
     }
   },
 
   async logout({ commit }) {
     try {
-      const auth = this.$firebaseAuth
-      await signOut(auth)
-      
       commit('CLEAR_AUTH')
       
       if (process.client) {
@@ -117,7 +137,12 @@ export const actions = {
         localStorage.removeItem('userUid')
       }
       
-      this.$router.push('/login')
+      if (process.client && this.$router) {
+        const currentRoute = this.$router.currentRoute.path
+        if (currentRoute === '/dashboard') {
+          this.$router.push('/login')
+        }
+      }
       
       return { success: true }
     } catch (error) {
@@ -135,8 +160,12 @@ export const actions = {
     }
   },
 
-  tryAutoLogin({ commit, dispatch }) {
+  tryAutoLogin({ commit, dispatch, state }) {
     if (!process.client) return
+
+    if (state.token && state.user) {
+      return true
+    }
 
     const token = localStorage.getItem('token')
     const expirationTime = localStorage.getItem('tokenExpiration')
@@ -144,15 +173,16 @@ export const actions = {
     const uid = localStorage.getItem('userUid')
 
     if (!token || !expirationTime) {
-      return
+      return false
     }
 
     const now = Date.now()
     const expiresIn = +expirationTime - now
 
     if (expiresIn < 0) {
+      // توکن منقضی شده
       dispatch('logout')
-      return
+      return false
     }
 
     commit('SET_TOKEN', token)
@@ -160,26 +190,35 @@ export const actions = {
     commit('SET_USER', { email, uid })
     
     dispatch('setLogoutTimer', expiresIn)
+    
+    return true
   },
 
   setLogoutTimer({ commit, dispatch }, expiresIn) {
+    if (this.state.logoutTimer) {
+      clearTimeout(this.state.logoutTimer)
+    }
+    
     const timer = setTimeout(() => {
       dispatch('logout')
     }, expiresIn)
     commit('SET_LOGOUT_TIMER', timer)
   },
 
-  initAuth({ dispatch }) {
-    if (process.client) {
-      dispatch('tryAutoLogin')
-      
-      const auth = this.$firebaseAuth
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          dispatch('logout')
-        }
-      })
+  convertFirebaseError(errorMessage) {
+    const errorMap = {
+      'EMAIL_EXISTS': 'auth/email-already-in-use',
+      'OPERATION_NOT_ALLOWED': 'auth/operation-not-allowed',
+      'TOO_MANY_ATTEMPTS_TRY_LATER': 'auth/too-many-requests',
+      'EMAIL_NOT_FOUND': 'auth/user-not-found',
+      'INVALID_PASSWORD': 'auth/wrong-password',
+      'INVALID_LOGIN_CREDENTIALS': 'auth/invalid-credential',
+      'USER_DISABLED': 'auth/user-disabled',
+      'INVALID_EMAIL': 'auth/invalid-email',
+      'WEAK_PASSWORD': 'auth/weak-password'
     }
+    
+    return errorMap[errorMessage] || 'auth/unknown-error'
   }
 }
 
